@@ -6,3 +6,4 @@ langchain-groq
 folium==0.14.0
 streamlit-folium==0.7.0
 langchain-community
+polyline
