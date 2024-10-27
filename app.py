@@ -1,8 +1,8 @@
 import streamlit as st
-from services.location import get_current_location
-from services.directions import get_nearby_services, get_directions
-from services.search import query_duckduckgo, query_llm
-from utils.map_utils import create_map
+from location import get_current_location
+from directions import get_nearby_services, get_directions
+from search import query_duckduckgo, query_llm
+from map_utils import create_map
 from streamlit_folium import st_folium
 import googlemaps
 
