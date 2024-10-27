@@ -16,7 +16,10 @@ if GOOGLE_MAPS_API_KEY:
 
 # Initialize session state for location and map
 if "location" not in st.session_state:
-    st.session_state["location"] = get_current_location()
+    # Convert location to tuple if available
+    initial_location = get_current_location()
+    if initial_location:
+        st.session_state["location"] = (initial_location['lat'], initial_location['lng'])
 
 if "map_displayed" not in st.session_state:
     st.session_state["map_displayed"] = False
@@ -36,7 +39,8 @@ if option == "Enter Address Manually":
         geocode_result = gmaps.geocode(manual_address)
         if geocode_result:
             location = geocode_result[0]['geometry']['location']
-            st.session_state["location"] = location  # Store location based on manual address
+            # Save location as a tuple
+            st.session_state["location"] = (location['lat'], location['lng'])
             st.write("Address saved successfully!")
         else:
             st.write("Could not find the specified address. Please try again.")
