@@ -16,8 +16,9 @@ if GOOGLE_MAPS_API_KEY:
 
 # Initialize session state for location and map
 if "location" not in st.session_state:
-    # Convert location to tuple if available
     initial_location = get_current_location()
+    # Check if initial_location is valid, else set to None
+    st.session_state["location"] = tuple(initial_location) if initial_location else None
 
 if "map_displayed" not in st.session_state:
     st.session_state["map_displayed"] = False
