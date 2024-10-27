@@ -27,10 +27,22 @@ if "directions_result" not in st.session_state:
 st.write("Welcome! Emily is here to help you with your trip planning needs.")
 
 # Dropdown for selecting options
-option = st.selectbox("What would you like to do?", ["Find Nearby Services", "Get Directions"])
+option = st.selectbox("What would you like to do?", ["Find Nearby Services", "Get Directions", "Enter Address Manually"])
+
+# Manual address entry section
+if option == "Enter Address Manually":
+    manual_address = st.text_input("Enter your address:", key="manual_address_input")
+    if manual_address and st.button("Save Address"):
+        geocode_result = gmaps.geocode(manual_address)
+        if geocode_result:
+            location = geocode_result[0]['geometry']['location']
+            st.session_state["location"] = location  # Store location based on manual address
+            st.write("Address saved successfully!")
+        else:
+            st.write("Could not find the specified address. Please try again.")
 
 # Service selection section
-if option == "Find Nearby Services" and GOOGLE_MAPS_API_KEY:
+elif option == "Find Nearby Services" and GOOGLE_MAPS_API_KEY:
     service_type = st.selectbox("Choose a service", ["restaurant", "fuel station", "hospital", "mechanic", "garage", "shopping_mall"])
     
     if st.session_state["location"]:
