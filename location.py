@@ -1,24 +1,24 @@
 import streamlit as st
 from streamlit.components.v1 import html
+import json
 
-# Function to display location in Streamlit
 def get_current_location():
-    # Inject JavaScript to get the user's location
+    # JavaScript to get user's geolocation and send back to Streamlit
     location_js = """
         <script>
+        // Function to get location and send to Streamlit
         function getLocation() {
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(
                     (position) => {
                         const lat = position.coords.latitude;
                         const lng = position.coords.longitude;
-                        // Send data back to Streamlit via hidden input
-                        document.getElementById("latitude").value = lat;
-                        document.getElementById("longitude").value = lng;
-                        document.getElementById("location-form").dispatchEvent(new Event("submit"));
-                    },
-                    (error) => {
-                        console.error("Error getting location:", error);
+                        // Send the latitude and longitude to Streamlit as JSON
+                        const data = {latitude: lat, longitude: lng};
+                        const json = JSON.stringify(data);
+                        const blob = new Blob([json], { type: 'application/json' });
+                        const url = URL.createObjectURL(blob);
+                        window.parent.postMessage({data: data}, '*');
                     }
                 );
             } else {
@@ -27,28 +27,23 @@ def get_current_location():
         }
         getLocation();
         </script>
-        <form id="location-form">
-            <input type="hidden" id="latitude" name="latitude">
-            <input type="hidden" id="longitude" name="longitude">
-        </form>
     """
-
-    # Display JavaScript in Streamlit and get location data
+    
+    # Display the HTML containing the JavaScript
+    html(location_js, height=0)
+    
+    # Read the location from Streamlit's query parameters
     latitude = st.experimental_get_query_params().get("latitude", [None])[0]
     longitude = st.experimental_get_query_params().get("longitude", [None])[0]
+    
+    # Return coordinates in the form [latitude, longitude] if both are available
+    return [float(latitude), float(longitude)]
 
-    # Display location data if available
-    if latitude and longitude:
-        st.write(f"Latitude: {latitude}, Longitude: {longitude}")
-        return [float(latitude), float(longitude)]
-    else:
-        html(location_js, height=0)
-        return None
-
-# Streamlit app code
+# Streamlit App Code
 st.title("Get Current Location in Streamlit")
 location = get_current_location()
+
 if location:
-    st.success(f"Location retrieved: {location}")
+    st.success(f"Location: {location}")
 else:
-    st.info("Retrieving location...")
+    st.info("Retrieving location, please allow location access in your browser...")
