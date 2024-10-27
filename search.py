@@ -15,15 +15,12 @@ llm = ChatGroq(
     max_retries=2
 )
 
-# Step 1. Instantiating your TavilyClient
-from tavily import TavilyClient
 
 
-def query_tavily(query):
-    """Perform a quick search using DuckDuckGo for immediate answers."""
-    client = TavilyClient(api_key="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")
-    response = client.search(query)
-    return response
+
+def query_duckduckgo(query):
+    search = DuckDuckGoSearchRun()
+    return search.invoke(query)
 
 def query_llm(prompt, system_instruction=""):
     # Convert prompt to string
