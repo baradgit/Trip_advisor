@@ -1,7 +1,7 @@
 import streamlit as st
 from services.location import get_current_location
 from services.directions import get_nearby_services, get_directions
-from services.search import query_tavily, query_llm
+from services.search import query_duckduckgo, query_llm
 from utils.map_utils import create_map
 from streamlit_folium import st_folium
 import googlemaps
@@ -70,6 +70,5 @@ if st.sidebar.button("Get Answer", key="get_answer_button"):
             answer = query_llm(question)
             st.sidebar.write("Answer: " + answer)
         except Exception as e:
-            tavily_response = query_tavily(question)
-            answer = " ".join(result.get('content', '') for result in tavily_response.get('results', []))
-            st.sidebar.write("tavily" + answer)
+            response = query_duckduckgo(question)
+            st.sidebar.write(response)
