@@ -28,6 +28,8 @@ if "directions_result" not in st.session_state:
 
 st.write("Welcome! Emily is here to help you with your trip planning needs.")
 
+st.markdown("<span style='background-color: yellow; font-weight: bold'>Note: Change Address in Drop down</span>", unsafe_allow_html=True)
+
 # Dropdown for selecting options
 option = st.selectbox("What would you like to do?", ["Find Nearby Services", "Get Directions", "Enter Address Manually"])
 
